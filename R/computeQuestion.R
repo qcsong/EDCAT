@@ -32,7 +32,6 @@
 #' @param CATdesign mirtCAT design object, obtained using mirtCAT(), see example
 #' @param askedQuestions The ID's of the questions administered so far
 #' @param responses The responses to each questions administered so far
-#' @import mirtCAT
 #' @return nextQuestion: the ID of the next question to administer or "done", indicating the termination of CAT
 #' @examples
 #' # Specify CATdesign object
