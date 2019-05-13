@@ -2,6 +2,6 @@
 
 export(computeQuestion)
 export(findNextItem)
-export(mirtCAT)
+export(mirtCAT2)
 export(mirtCAT_preamble)
 export(updateDesign)

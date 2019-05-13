@@ -112,9 +112,9 @@ mirtCAT_preamble_internal <-
         stop('choiceNames input is not the correct length', call.=FALSE)
       if(length(shinyGUI$choiceValues) != nitems)
         stop('choiceValues input is not the correct length', call.=FALSE)
-      obj <- buildShinyElements(df, itemnames = Names, customTypes=customTypes,
-                                choiceNames=shinyGUI$choiceNames, 
-                                choiceValues=shinyGUI$choiceValues)
+      # obj <- buildShinyElements(df, itemnames = Names, customTypes=customTypes,
+      #                           choiceNames=shinyGUI$choiceNames, 
+      #                           choiceValues=shinyGUI$choiceValues)
       questions <- obj$questions
       item_answers <- obj$item_answers
       item_options <- obj$item_options
