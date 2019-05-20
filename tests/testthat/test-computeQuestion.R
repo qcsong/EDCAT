@@ -1,6 +1,9 @@
+# a github personal access token. See https://github.com/settings/tokens
+git.token <- readLines('../../GIT-TOKEN')
+
 test_that("can call mirtCAT()", {
-  devtools::install_github(repo='philchalmers/mirt', auth_token = '8c55601cbf6cac95d9c6a71aa4fec0f10a81aa55')
-  devtools::install_github(repo='philchalmers/mirtcat', auth_token = '8c55601cbf6cac95d9c6a71aa4fec0f10a81aa55')
+  devtools::install_github(repo='philchalmers/mirt', auth_token = git.token)
+  devtools::install_github(repo='philchalmers/mirtcat', auth_token = git.token)
   library(mirtCAT)
   data(CATDesign)
   designElements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
