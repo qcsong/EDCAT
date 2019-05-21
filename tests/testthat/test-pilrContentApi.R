@@ -51,3 +51,8 @@ test_that("returns correct question as a card", {
     }
   }
 })
+
+test_that("works with sample request", {
+  source('sample-parameters2.R')
+  result <- pilrContentApi('myPt', resultsSoFar, sourceCard)
+})

@@ -3,9 +3,16 @@
 ## for requests submitted by openCPU.
 ##
 ##################################################################################
-library('mirtCAT')
 
-#'@export
+library('mirtCAT')
+data(CATDesign)
+design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
+                           design_elements = TRUE,
+                           design = list(min_SEM = rep(0.4, 3),
+                                         max_items = ncol(data_epsi1a),
+                                         delta_thetas = rep(0.03, 3)))
+#' @export
+#' @import mirtCAT
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
                              computeFn = computeQuestion,
@@ -19,9 +26,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     questions <- c(questions, as.numeric(qs))
     answers <- c(answers, as.numeric(as))
   }
-  # print(list(qs=questions, as=answers))
   sourceCard$section <- sourceCard$section + 1
-  nextQuestionIx <- computeFn(designElements(), questions, answers)
+  nextQuestionIx <- computeFn(design.elements, questions, answers)
 
   option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
   options <- lapply(mirtCatDataFrame[nextQuestionIx, option.names], function(optStr) {
@@ -42,20 +48,3 @@ dumper <- function(participantCode, resultsSoFar, sourceCard) {
   dump(c('participantCode', 'resultsSoFar', 'sourceCard'), file=fn)
   readChar(fn, file.info(fn)$size)
 }
-
-library('mirtCAT')
-data(CATDesign)
-
-designElements.cached <- NULL
-
-designElements <- function() {
-  if (is.null(designElements.cached)){
-    designElements.cached <<-
-      mirtCAT(df, criteria = 'KL', start_item = 'Trule',
-              design_elements = TRUE,
-              design = list(min_SEM = rep(0.4, 3),
-                            max_items = ncol(data_epsi1a),
-                            delta_thetas = rep(0.03, 3)))
-  }
-  designElements.cached 
-}  
