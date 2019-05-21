@@ -7,7 +7,7 @@
 
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
-                             computeFn = EDCAT::computeQuestion,
+                             computeFn = computeQuestion,
                              mirtCatDataFrame = df) {
   questions <- c()
   answers <- c()
