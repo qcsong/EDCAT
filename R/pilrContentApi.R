@@ -3,7 +3,7 @@
 ## for requests submitted by openCPU.
 ##
 ##################################################################################
-
+library('mirtCAT')
 
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
