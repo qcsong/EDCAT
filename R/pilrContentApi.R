@@ -5,6 +5,7 @@
 ##################################################################################
 library('mirtCAT')
 
+#'@export
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
                              computeFn = computeQuestion,

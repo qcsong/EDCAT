@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Imports:
+    mirt,
     mirtCAT
 Suggests:
     BH (== 1.69.0-1),
@@ -48,8 +49,6 @@ Suggests:
     markdown (== 0.9),
     memoise (== 1.1.0),
     mime (== 0.6),
-    mirt (== 1.30),
-    mirtCAT (== 1.8),
     mnormt (== 1.5-5),
     numDeriv (== 2016.8-1),
     openssl (== 1.2.1),
