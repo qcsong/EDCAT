@@ -6,17 +6,32 @@
 
 library('mirtCAT')
 data(CATDesign)
-design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
-                           design_elements = TRUE,
-                           design = list(min_SEM = rep(0.4, 3),
-                                         max_items = ncol(data_epsi1a),
-                                         delta_thetas = rep(0.03, 3)))
+
+compute.fn <- function(design.elements, questions, answers) {
+  if (is.null(questions)) {
+    return(1)
+  }
+  updateDesign(design.elements, items=questions, responses=answers)
+  tryCatch({
+    findNextItem(design.elements)
+  },
+  error = function(error_condition) {
+    1
+  })
+}
+
+
 #' @export
 #' @import mirtCAT
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
-                             computeFn = computeQuestion,
+                             computeFn = compute.fn,
                              mirtCatDataFrame = df) {
+  design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
+                             design_elements = TRUE,
+                             design = list(min_SEM = rep(0.4, 3),
+                                           max_items = ncol(data_epsi1a),
+                                           delta_thetas = rep(0.03, 3)))
   questions <- c()
   answers <- c()
   for (section in resultsSoFar) {
@@ -39,7 +54,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              text = '',
                              code = paste0('mc:', nextQuestionIx),
                              options = options))
-  result
+  list(result=result)
 }
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
