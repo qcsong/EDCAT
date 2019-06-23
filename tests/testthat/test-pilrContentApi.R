@@ -27,28 +27,41 @@ test_that("extracts questions and options correctly", {
   result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
                              computeFn = dummyCompute,
                              mirtCatDataFrame = dummyMirtCatDf)
+  expect_equal(result$error, NULL)
   expect_equal(questions, c(2, 3, 4, 6))
   expect_equal(answers, c(20, 30, 40, 60))
 })
 
 test_that("returns correct question as a card", {
+  expectedNextCalcContentCard <- sourceCard
+  expectedNextCalcContentCard$section <- 2
   opt.filter = grepl('Option.*', names(dummyMirtCatDf))
   for (i in 1:3) {
-    result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
-                               computeFn = function(x,y,z) { i },
-                               mirtCatDataFrame = dummyMirtCatDf)
     expected.opts = lapply(list(1,2,3,4,5),
-                         function (optix) {
-                            list(value = paste(optix), name = dummyMirtCatDf[[i, paste0('Option.', optix)]])
-                         })
-    expect_equal(result$section, 1)
-    expect_equal(result$data$title, dummyMirtCatDf$Question[[i]])
-    expect_equal(result$data$text, '')
-    expect_equal(length(result$data$options), length(names(dummyMirtCatDf)[opt.filter]))
-    for (optix in 1:length(result$data$options)) {
-      expect_equal(result$data$options[[optix]]$value, paste(optix-1))
-      expect_equal(result$data$options[[optix]]$name, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
+                           function (optix) {
+                             list(value = paste(optix), name = dummyMirtCatDf[[i, paste0('Option.', optix)]])
+                           })
+    
+    result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
+                             computeFn = function(x,y,z) { i },
+                             mirtCatDataFrame = dummyMirtCatDf)
+    
+    cards <- result$result
+    expect_equal(length(cards), 2)
+    
+    calcuatedCard <- cards[[1]]
+    nextCalcContentCard <- cards[[2]]
+    
+    expect_equal(calcuatedCard$section, 2)
+    expect_equal(calcuatedCard$data$title, dummyMirtCatDf$Question[[i]])
+    expect_equal(calcuatedCard$data$text, '')
+    expect_equal(length(calcuatedCard$data$options), length(names(dummyMirtCatDf)[opt.filter]))
+    for (optix in 1:length(calcuatedCard$data$options)) {
+      expect_equal(calcuatedCard$data$options[[optix]]$value, paste(optix-1))
+      expect_equal(calcuatedCard$data$options[[optix]]$name, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
     }
+    
+    expect_equal(nextCalcContentCard, expectedNextCalcContentCard)
   }
 })
 

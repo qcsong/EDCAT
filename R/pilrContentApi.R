@@ -49,12 +49,12 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     parts <- strsplit(optStr, '-')[[1]]
     list(value = parts[[1]], name = parts[[2]])
   })
-  result <- list(section = 1,
-                 data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
-                             text = '',
-                             code = paste0('mc:', nextQuestionIx),
-                             options = options))
-  list(result=result)
+  calculatedCard <- list(section = sourceCard$section,
+                         data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
+                                     text = '',
+                                     code = paste0('mc:', nextQuestionIx),
+                                     options = options))
+  list(result=list(calculatedCard,  sourceCard))
 }
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
