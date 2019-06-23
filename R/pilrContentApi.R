@@ -49,7 +49,9 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     parts <- strsplit(optStr, '-')[[1]]
     list(value = parts[[1]], name = parts[[2]])
   })
-  calculatedCard <- list(section = sourceCard$section,
+  calculatedCard <- list(card_type = 'q_select',
+                         section = sourceCard$section,
+                         order = 1,
                          data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
                                      text = '',
                                      code = paste0('mc:', nextQuestionIx),
