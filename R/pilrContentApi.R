@@ -54,7 +54,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                                      text = '',
                                      code = paste0('mc:', nextQuestionIx),
                                      options = options))
-  list(result=list(calculatedCard,  sourceCard))
+  list(result=list(calculatedCard))
 }
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing

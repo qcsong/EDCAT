@@ -33,8 +33,8 @@ test_that("extracts questions and options correctly", {
 })
 
 test_that("returns correct question as a card", {
-  expectedNextCalcContentCard <- sourceCard
-  expectedNextCalcContentCard$section <- 2
+  # expectedNextCalcContentCard <- sourceCard
+  # expectedNextCalcContentCard$section <- 2
   opt.filter = grepl('Option.*', names(dummyMirtCatDf))
   for (i in 1:3) {
     expected.opts = lapply(list(1,2,3,4,5),
@@ -47,11 +47,10 @@ test_that("returns correct question as a card", {
                              mirtCatDataFrame = dummyMirtCatDf)
     
     cards <- result$result
-    expect_equal(length(cards), 2)
+    expect_equal(length(cards), 1)
     
     calcuatedCard <- cards[[1]]
-    nextCalcContentCard <- cards[[2]]
-    
+
     expect_equal(calcuatedCard$section, 2)
     expect_equal(calcuatedCard$data$title, dummyMirtCatDf$Question[[i]])
     expect_equal(calcuatedCard$data$text, '')
@@ -61,7 +60,7 @@ test_that("returns correct question as a card", {
       expect_equal(calcuatedCard$data$options[[optix]]$name, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
     }
     
-    expect_equal(nextCalcContentCard, expectedNextCalcContentCard)
+   # expect_equal(nextCalcContentCard, expectedNextCalcContentCard)
   }
 })
 
