@@ -57,7 +57,7 @@ test_that("returns correct question as a card", {
     expect_equal(length(calcuatedCard$data$options), length(names(dummyMirtCatDf)[opt.filter]))
     for (optix in 1:length(calcuatedCard$data$options)) {
       expect_equal(calcuatedCard$data$options[[optix]]$value, paste(optix-1))
-      expect_equal(calcuatedCard$data$options[[optix]]$name, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
+      expect_equal(calcuatedCard$data$options[[optix]]$text, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
     }
     
    # expect_equal(nextCalcContentCard, expectedNextCalcContentCard)

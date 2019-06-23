@@ -47,7 +47,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
   option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
   options <- lapply(mirtCatDataFrame[nextQuestionIx, option.names], function(optStr) {
     parts <- strsplit(optStr, '-')[[1]]
-    list(value = parts[[1]], name = parts[[2]])
+    list(value = parts[[1]], text = parts[[2]], order=1+as.numeric(parts[[1]]))
   })
   names(options) <- NULL
   calculatedCard <- list(card_type = 'q_select',
