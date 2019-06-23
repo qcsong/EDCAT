@@ -49,6 +49,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     parts <- strsplit(optStr, '-')[[1]]
     list(value = parts[[1]], name = parts[[2]])
   })
+  names(options) <- NULL
   calculatedCard <- list(card_type = 'q_select',
                          section = sourceCard$section,
                          order = 1,
