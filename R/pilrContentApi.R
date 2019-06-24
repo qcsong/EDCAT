@@ -41,7 +41,6 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     questions <- c(questions, as.numeric(qs))
     answers <- c(answers, as.numeric(as))
   }
-  sourceCard$section <- sourceCard$section + 1
   nextQuestionIx <- computeFn(design.elements, questions, answers)
 
   option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
