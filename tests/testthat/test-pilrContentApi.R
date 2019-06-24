@@ -47,11 +47,12 @@ test_that("returns correct question as a card", {
                              mirtCatDataFrame = dummyMirtCatDf)
     
     cards <- result$result
-    expect_equal(length(cards), 1)
+    expect_equal(length(cards), 2)
     
     calcuatedCard <- cards[[1]]
 
-    expect_equal(calcuatedCard$section, 2)
+    expect_equal(calcuatedCard$section, sourceCard$section)
+    expect_equal(calcuatedCard$card_type, 'q_select')
     expect_equal(calcuatedCard$data$title, dummyMirtCatDf$Question[[i]])
     expect_equal(calcuatedCard$data$text, '')
     expect_equal(length(calcuatedCard$data$options), length(names(dummyMirtCatDf)[opt.filter]))
@@ -59,6 +60,9 @@ test_that("returns correct question as a card", {
       expect_equal(calcuatedCard$data$options[[optix]]$value, paste(optix-1))
       expect_equal(calcuatedCard$data$options[[optix]]$text, substring(dummyMirtCatDf[[i, paste0('Option.', optix)]], 3))
     }
+    
+    expect_equal(cards[[2]]$card_type, sourceCard$card_type)
+    expect_equal(cards[[2]]$section, sourceCard$section + 1)
     
    # expect_equal(nextCalcContentCard, expectedNextCalcContentCard)
   }

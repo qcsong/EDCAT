@@ -7,6 +7,7 @@
 library('mirtCAT')
 data(CATDesign)
 
+#' A wrapper around mirtCAT#updateDesign()
 compute.fn <- function(design.elements, questions, answers) {
   if (is.null(questions)) {
     return(1)
@@ -49,6 +50,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     list(value = parts[[1]], text = parts[[2]], order=1+as.numeric(parts[[1]]))
   })
   names(options) <- NULL
+  
   calculatedCard <- list(card_type = 'q_select',
                          section = sourceCard$section,
                          order = 1,
