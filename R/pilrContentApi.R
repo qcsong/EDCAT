@@ -35,11 +35,18 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                                              max_items = ncol(data_epsi1a),
                                              delta_thetas = rep(0.03, 3)))
     history <- buildHistory(resultsSoFar)
+    
+    if (!is.null(sourceCard$data$args)) {
+      params <- jsonlite::parse_json(sourceCard$data$args)
+      if(nrow(history) >= params$maxQuestions) {
+        return(buildDoneResult(sourceCard$section))
+      }
+    }
 
     nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
     
     if (is.na(nextQuestionIx)) {
-      return(list(result=list(buildInstructionCard('Done', 'Tap submit to send results', sourceCard$section))))
+      return(buildDoneResult(section))
     }
     
     options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
@@ -90,7 +97,11 @@ optionsForQuestion <- function(questionIx, mirtCatDataFrame) {
   options
 }
 
-buildInstructionCard <- function(title, text, section) {
+buildDoneResult <- function(section) {
+  list(result=list(buildDoneCard(section)))
+}
+
+buildDoneCard <- function(section, title= 'Finished', text='Thank you! Please press submit to send results.') {
   list(card_type = 'instruction',
        section = section,
        order = 1,
