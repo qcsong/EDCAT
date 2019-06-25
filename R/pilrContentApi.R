@@ -84,6 +84,16 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
   list(result=list(calculatedCard, nextCalcCard))
 }
 
+#' pilrContentApi clone that terminates after 2 cards
+#' @export
+testPilrContentApi <- function(participantCode, resultsSoFar, sourceCard) {
+  if (length(resultsSoFar) > 2) {
+    return(c()) 
+  }
+  pilrContentApi(participantCode, resultsSoFar, sourceCard)
+}
+
+
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
 dumper <- function(participantCode, resultsSoFar, sourceCard) {
   fn <- 'dumped-stuff.R'
