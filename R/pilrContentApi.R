@@ -27,31 +27,39 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
                              computeFn = findNextQuestionIx,
                              mirtCatDataFrame = df) {
+  tryCatch({
+    # need to build fresh every time because update.disgn modifies it
+    design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
+                               design_elements = TRUE,
+                               design = list(min_SEM = rep(0.4, 3),
+                                             max_items = ncol(data_epsi1a),
+                                             delta_thetas = rep(0.03, 3)))
+    history <- buildHistory(resultsSoFar)
 
-  # need to build fresh every time because update.disgn modifies it
-  design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
-                             design_elements = TRUE,
-                             design = list(min_SEM = rep(0.4, 3),
-                                           max_items = ncol(data_epsi1a),
-                                           delta_thetas = rep(0.03, 3)))
-  history <- buildHistory(resultsSoFar)
-  
-  nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
-
-  options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
-  
-  calculatedCard <- list(card_type = 'q_select',
-                         section = sourceCard$section,
-                         order = 1,
-                         data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
-                                     text = '',
-                                     code = paste0('mc:', nextQuestionIx),
-                                     options = options))
-  
-  nextCalcCard <- sourceCard
-  nextCalcCard$section <- nextCalcCard$section + 1
-  
-  list(result=list(calculatedCard, nextCalcCard))
+    nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
+    
+    if (is.na(nextQuestionIx)) {
+      return(list(result=list(buildInstructionCard('Done', 'Tap submit to send results', sourceCard$section))))
+    }
+    
+    options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
+    
+    calculatedCard <- list(card_type = 'q_select',
+                           section = sourceCard$section,
+                           order = 1,
+                           data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
+                                       text = '',
+                                       code = paste0('mc:', nextQuestionIx),
+                                       options = options))
+    
+    nextCalcCard <- sourceCard
+    nextCalcCard$section <- nextCalcCard$section + 1
+    
+    list(result=list(calculatedCard, nextCalcCard))
+  },
+  error = function(error_condition) {
+    list(error=error_condition)
+  })
 }
 
 #' Extracts question and answer indices from resultsSoFar
@@ -80,6 +88,15 @@ optionsForQuestion <- function(questionIx, mirtCatDataFrame) {
   })
   names(options) <- NULL
   options
+}
+
+buildInstructionCard <- function(title, text, section) {
+  list(card_type = 'instruction',
+       section = section,
+       order = 1,
+       data = list(title = title,
+                   text = text,
+                   code = paste0('mc:done')))  
 }
 
 #' pilrContentApi clone that terminates after 2 cards
