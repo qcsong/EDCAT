@@ -25,35 +25,20 @@ data(CATDesign)
 #' @import mirtCAT
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
-                             computeFn = compute.fn,
+                             computeFn = findNextQuestionIx,
                              mirtCatDataFrame = df) {
-  questions <- c()
-  answers <- c()
-  for (section in resultsSoFar) {
-    filter <- grepl('mc:.*', section$data$question_code)
-    qs = substring(section$data$question_code[filter], 4) # question ix is code with 'mc:' prefix removed
-    as = section$data$response_value[filter]
-    questions <- c(questions, as.numeric(qs))
-    answers <- c(answers, as.numeric(as))
-  }
-  
+
+  # need to build fresh every time because update.disgn modifies it
   design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
                              design_elements = TRUE,
                              design = list(min_SEM = rep(0.4, 3),
                                            max_items = ncol(data_epsi1a),
                                            delta_thetas = rep(0.03, 3)))
+  history <- buildHistory(resultsSoFar)
   
-  nextQuestionIx <- computeFn(design.elements, questions, answers)
+  nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
 
-  # Convert mirtCAT options [dataframe columns named 'Option-0', etc] to card options
-  option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
-  options <- lapply(mirtCatDataFrame[nextQuestionIx, option.names], function(optStr) {
-    parts <- strsplit(optStr, '-')[[1]]
-    list(value = parts[[1]], 
-         text = parts[[2]], 
-         order=1+as.numeric(parts[[1]]))
-  })
-  names(options) <- NULL
+  options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
   
   calculatedCard <- list(card_type = 'q_select',
                          section = sourceCard$section,
@@ -67,6 +52,34 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
   nextCalcCard$section <- nextCalcCard$section + 1
   
   list(result=list(calculatedCard, nextCalcCard))
+}
+
+#' Extracts question and answer indices from resultsSoFar
+buildHistory = function(resultsSoFar) {
+  questions <- c()
+  answers <- c()
+  for (section in resultsSoFar) {
+    filter <- grepl('mc:.*', section$data$question_code)
+    qs = substring(section$data$question_code[filter], 4) # question ix is code with 'mc:' prefix removed
+    as = section$data$response_value[filter]
+    questions <- c(questions, as.numeric(qs))
+    answers <- c(answers, as.numeric(as))
+  }
+  data.frame(questions, answers)
+}
+
+#' Construct the EMA single-select card option list for the given question
+optionsForQuestion <- function(questionIx, mirtCatDataFrame) {
+  # Convert mirtCAT options [dataframe columns named 'Option-0', etc] to card options
+  option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
+  options <- lapply(mirtCatDataFrame[questionIx, option.names], function(optStr) {
+    parts <- strsplit(optStr, '-')[[1]]
+    list(value = parts[[1]], 
+         text = parts[[2]], 
+         order=1+as.numeric(parts[[1]]))
+  })
+  names(options) <- NULL
+  options
 }
 
 #' pilrContentApi clone that terminates after 2 cards
