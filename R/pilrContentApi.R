@@ -1,27 +1,12 @@
 ##################################################################################
-## A facde for computeQuestion that implements the PiL<R Calculated Content API
+## A facade for computeQuestion that implements the PiL<R Calculated Content API
 ## for requests submitted by openCPU.
 ##
 ##################################################################################
-
 library('mirtCAT')
 
-#' Set global variable df, the mirtCAT data-frame that defines the survey.
+#' Set global constant df, the mirtCAT data-frame that defines the survey.
 data(CATDesign)
-
-#' A wrapper around mirtCAT#updateDesign()
-compute.fn <- function(design.elements, questions, answers) {
-  if (is.null(questions)) {
-    return(1)
-  }
-  updateDesign(design.elements, items=questions, responses=answers)
-  tryCatch({
-    findNextItem(design.elements)
-  },
-  error = function(error_condition) {
-    1
-  })
-}
 
 #' Wrap PiLR Content API around a mirtCAT survey
 #' 
@@ -46,7 +31,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
   answers <- c()
   for (section in resultsSoFar) {
     filter <- grepl('mc:.*', section$data$question_code)
-    qs = substring(section$data$question_code[filter], 4)
+    qs = substring(section$data$question_code[filter], 4) # question ix is code with 'mc:' prefix removed
     as = section$data$response_value[filter]
     questions <- c(questions, as.numeric(qs))
     answers <- c(answers, as.numeric(as))
