@@ -3,7 +3,6 @@
 ## for requests submitted by openCPU.
 ##
 ##################################################################################
-library('mirtCAT')
 
 #' Set global constant df, the mirtCAT data-frame that defines the survey.
 data(CATDesign)
@@ -109,16 +108,6 @@ buildDoneCard <- function(section, title= 'Finished', text='Thank you! Please pr
                    text = text,
                    code = paste0('mc:done')))  
 }
-
-#' pilrContentApi clone that terminates after 2 cards
-#' @export
-testPilrContentApi <- function(participantCode, resultsSoFar, sourceCard) {
-  if (length(resultsSoFar) > 2) {
-    return(c()) 
-  }
-  pilrContentApi(participantCode, resultsSoFar, sourceCard)
-}
-
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
 dumper <- function(participantCode, resultsSoFar, sourceCard) {
