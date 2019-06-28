@@ -8,18 +8,23 @@
 data(CATDesign)
 
 #' Wrap PiLR Content API around a mirtCAT survey
-#' 
+#'
 #' See "232 - KU Cat Design - Remote Calculation Card" (https://docs.google.com/document/d/1fC8kag54Ttm9Yy0vm3oayHKyk5jLnvHw9e5MOqrkZJo)
 #'
 #' @param participantCode not used here but part of API
-#' 
-#' @param resultsSoFar the 'result' variable from EMA survey director.  
+#'
+#' @param resultsSoFar the 'result' variable from EMA survey director.
 #'   It defines the questions asked so far and the answers given
-#'   
-#' @param sourceCard the calulated content card object that triggered this request. 
-#' 
+#'
+#' @param sourceCard the calulated content card object that triggered this request. Only the properties listed below are
+#'   used.
+#'
+#' @param sourceCard$section is used so set the section of the expansion cards
+#'
+#' @param sourceCard$args$maxQuestions is option for testing.  If set, pilrContentApi() will return the Done result
+#'
 #' @return a list of cards objects with which EMA replaces the sourceCard in the survey
-#' 
+#'
 #' @export
 #' @import mirtCAT
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
@@ -34,7 +39,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                                              max_items = ncol(data_epsi1a),
                                              delta_thetas = rep(0.03, 3)))
     history <- buildHistory(resultsSoFar)
-    
+
+    # For testing,
     if (!is.null(sourceCard$data$args)) {
       params <- jsonlite::parse_json(sourceCard$data$args)
       if(nrow(history) >= params$maxQuestions) {
@@ -43,13 +49,13 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     }
 
     nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
-    
+
     if (is.na(nextQuestionIx)) {
       return(buildDoneResult(section))
     }
-    
+
     options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
-    
+
     calculatedCard <- list(card_type = 'q_select',
                            section = sourceCard$section,
                            order = 1,
@@ -57,10 +63,10 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                                        text = '',
                                        code = paste0('mc:', nextQuestionIx),
                                        options = options))
-    
+
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
-    
+
     list(result=list(calculatedCard, nextCalcCard))
   },
   error = function(error_condition) {
@@ -88,8 +94,8 @@ optionsForQuestion <- function(questionIx, mirtCatDataFrame) {
   option.names = names(mirtCatDataFrame)[grepl('Option.*', names(mirtCatDataFrame))]
   options <- lapply(mirtCatDataFrame[questionIx, option.names], function(optStr) {
     parts <- strsplit(optStr, '-')[[1]]
-    list(value = parts[[1]], 
-         text = parts[[2]], 
+    list(value = parts[[1]],
+         text = parts[[2]],
          order=1+as.numeric(parts[[1]]))
   })
   names(options) <- NULL
@@ -106,7 +112,7 @@ buildDoneCard <- function(section, title= 'Finished', text='Thank you! Please pr
        order = 1,
        data = list(title = title,
                    text = text,
-                   code = paste0('mc:done')))  
+                   code = paste0('mc:done')))
 }
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
