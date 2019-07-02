@@ -25,7 +25,7 @@ test_that("extracts questions and options correctly", {
   }
 
   result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
-                             computeFn = dummyCompute,
+                             findNextFn = dummyCompute,
                              mirtCatDataFrame = dummyMirtCatDf)
   expect_equal(result$error, NULL)
   expect_equal(questions, c(2, 3, 4, 6))
@@ -52,7 +52,7 @@ test_that("returns correct question as a card", {
                            })
     
     result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
-                             computeFn = function(x,y,z) { i },
+                             findNextFn = function(x,y,z) { i },
                              mirtCatDataFrame = dummyMirtCatDf)
     
     cards <- result$result

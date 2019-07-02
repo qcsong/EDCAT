@@ -22,6 +22,10 @@ data(CATDesign)
 #' @param sourceCard$section is used so set the section of the expansion cards
 #'
 #' @param sourceCard$args$maxQuestions is option for testing.  If set, pilrContentApi() will return the Done result
+#' 
+#' @param findNextFn is a hook for testing. Its default value invokes a facade for mirtCAT::findNext.
+#' 
+#' @mirtCatDataFrame is the 'df' parameter passed to mirtCAT::mirtCAT. It defines the questions and response options. 
 #'
 #' @return a list of cards objects with which EMA replaces the sourceCard in the survey
 #'
@@ -29,7 +33,7 @@ data(CATDesign)
 #' @import mirtCAT
 pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
-                             computeFn = findNextQuestionIx,
+                             findNextFn = findNextQuestionIx,
                              mirtCatDataFrame = df) {
   tryCatch({
     # need to build fresh every time because update.disgn modifies it
@@ -48,7 +52,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
       }
     }
 
-    nextQuestionIx <- computeFn(design.elements, history$questions, history$answers)
+    nextQuestionIx <- findNextFn(design.elements, history$questions, history$answers)
 
     if (is.na(nextQuestionIx)) {
       return(buildDoneResult(section))
