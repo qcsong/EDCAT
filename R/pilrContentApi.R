@@ -59,11 +59,17 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
 
     options <- optionsForQuestion(nextQuestionIx, mirtCatDataFrame)
 
+    text <- if (!is.null(params$debug)) {
+      paste0('(question #', nextQuestionIx, ')') 
+    } else {
+      ''
+    }
+
     calculatedCard <- list(card_type = 'q_select',
                            section = sourceCard$section,
                            order = 1,
                            data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
-                                       text = '',
+                                       text = text,
                                        code = paste0('mc:', nextQuestionIx),
                                        options = options))
 
