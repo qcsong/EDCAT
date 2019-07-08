@@ -35,6 +35,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                              # following parameters are test hooks.
                              findNextFn = findNextQuestionIx,
                              mirtCatDataFrame = df) {
+  params <- parseParameters(sourceCard$data$args)
+
   tryCatch({
     # need to build fresh every time because update.disgn modifies it
     design.elements <- mirtCAT(df, mod, criteria = 'KL', start_item = 'Trule',
@@ -44,14 +46,11 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                                              delta_thetas = rep(0.03, 3)))
     history <- buildHistory(resultsSoFar)
 
-    # For testing,
-    if (!is.null(sourceCard$data$args)) {
-      params <- jsonlite::parse_json(sourceCard$data$args)
-      if(nrow(history) >= params$maxQuestions) {
-        return(buildDoneResult(sourceCard$section))
-      }
+    # For testing
+    if(!is.null(params$maxQuestions) && nrow(history) >= params$maxQuestions) {
+      return(buildDoneResult(sourceCard$section))
     }
-
+    
     nextQuestionIx <- findNextFn(design.elements, history$questions, history$answers)
 
     if (is.na(nextQuestionIx)) {
@@ -76,6 +75,19 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
   error = function(error_condition) {
     list(error=error_condition)
   })
+}
+
+parseParameters <- function(argString) {
+  tryCatch({
+     result = jsonlite::parse_json(argString)
+     str(list(parseresult=result))
+     if (is.list(result)) {
+       result
+     } else {
+       list(error='expected a JSON object')
+     }
+  },
+  error = function(error) { list(error=error, argString=argString) } )
 }
 
 #' Extracts question and answer indices from resultsSoFar

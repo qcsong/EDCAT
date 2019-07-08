@@ -51,6 +51,7 @@ test_that("returns correct question as a card", {
                              list(value = paste(optix), name = dummyMirtCatDf[[i, paste0('Option.', optix)]])
                            })
     
+    
     result <- pilrContentApi('myPt', resultsSoFar, sourceCard,
                              findNextFn = function(x,y,z) { i },
                              mirtCatDataFrame = dummyMirtCatDf)
