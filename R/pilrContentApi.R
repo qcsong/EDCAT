@@ -53,7 +53,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     
     nextQuestionIx <- findNextFn(design.elements, history$questions, history$answers)
 
-    if (is.na(nextQuestionIx)) {
+    if (!is.numeric(nextQuestionIx)) {
       return(buildDoneResult(section))
     }
 
