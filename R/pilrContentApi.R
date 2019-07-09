@@ -71,6 +71,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
                            data = list(title = mirtCatDataFrame$Question[[nextQuestionIx]],
                                        text = text,
                                        code = paste0('mc:', nextQuestionIx),
+                                       required = TRUE,
                                        options = options))
 
     nextCalcCard <- sourceCard
