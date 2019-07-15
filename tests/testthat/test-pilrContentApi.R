@@ -112,30 +112,6 @@ test_that("same results shiny version when no repsonses to mirtCAT questions so 
   expect_equal(result$result[[1]]$data$title, ' I did not like how clothes fit the shape of my body')
 })
 
-test_that("same results shiny version given a test sequence", {
-  testSequence <- data.frame(
-    questionIndex = c(1, 40),
-    responseIndex = c(4, 4),
-    expectedTitles = c(' I did not like how clothes fit the shape of my body',
-                       ' People told me that I do not eat very much')
-  )
-  for (i in 1:nrow(testSequence))  {
-    subSeq <- testSequence[c(1:i)]
-    responses <- buildResultsSoFar(
-      list(`1` = list( event_type=rep('response', i),
-                       question_code=sapply(subSeq, 
-                                            function(qix) paste0('mc:',qix),
-                                            simplify = TRUE),
-                       response_value=sapply(subSeq$responseIndex, paste0),
-                       question_type=rep('q_select', i))) )
-   result <- pilrContentApi('ptx', responses, sourceCard) 
-   str(result)
-   str(responses)
-   expect_equal(length(result$result), 2)
-   expect_equal(result$result[[1]]$data$title, testSequence$expectedTitles[i])
-   #expect_equal(result$result[[1]]$data$code, 'mc:1')
-  }
-})
 
 buildResultsSoFar <- function(sections) {
   result <- sapply(sections, buildSection, simplify = FALSE)

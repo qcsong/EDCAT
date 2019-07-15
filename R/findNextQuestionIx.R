@@ -3,6 +3,7 @@
 # mirtCAT() inputs that specify the survey
 mirtCAT.mo <- readRDS('data/mmod3.rds')
 mirtCAT.options <- readRDS('data/options.rds')
+
 mirtCAT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
                  Option = mirtCAT.options, 
                  Type = "radio", 
@@ -43,4 +44,8 @@ titleForQuestion <- function(questionIx) {
 
 optionTextsForQuestion <- function(questionIx) {
   mirtCAT.options[questionIx,]
+}
+
+questionIxMatching <- function(text) {
+  match(text, mirtCAT.df$Question)
 }

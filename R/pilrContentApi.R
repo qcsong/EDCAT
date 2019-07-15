@@ -46,7 +46,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
       return(buildDoneResult(section))
     }
 
-    text <- if (param('debug', FALSE)) {
+    text <- if (as.logical(param('debug', FALSE))) {
       paste0('(question #', nextQuestionIx, ')') 
     } else {
       ''
