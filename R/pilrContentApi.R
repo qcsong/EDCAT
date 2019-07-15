@@ -51,8 +51,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     } else {
       ''
     }
-
-    calculatedCard <- buildSelectCard(nextQuestionIx, sourceCard$section) 
+    calculatedCard <- buildSelectCard(nextQuestionIx, sourceCard$section, text) 
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
 
@@ -92,7 +91,7 @@ buildHistory = function(resultsSoFar) {
   data.frame(questions, answers)
 }
 
-buildSelectCard <- function(questionIx, section) {
+buildSelectCard <- function(questionIx, section, text) {
   list(card_type = 'q_select',
        section = section,
        order = 1,
