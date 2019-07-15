@@ -1,0 +1,201 @@
+{
+  "participantCode": "pt1",
+  "resultsSoFar": {
+    "1": [
+      {
+        "data": {
+          "_id": {
+            "$type": "id",
+            "id": "5cd2fe5783071a044106b238"
+          },
+          "event_type": "response",
+          "question_code": "ignored1",
+          "question_type": "information",
+          "response": "link clicked: false",
+          "response_value": null,
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "58DF925D-CCFB-4C9B-9835-5CEFC7C4B16A",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:43-05:00"
+        }
+      },
+      {
+        "data": {
+          "_id": {
+            "$type": "id",
+            "id": "5cd2fe5783071a11eb04f63a"
+          },
+          "event_type": "response",
+          "more_data": {
+            "random_card": {
+              "bin_name": "bin-1"
+            }
+          },
+          "question_code": "mc:2",
+          "response_value": "20",
+          "question_type": "instruction",
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "265806C6-3E2F-4A42-9366-851188FF927D",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:43-05:00"
+        }
+      },
+      {
+        "data": {
+          "_id": {
+            "$type": "id",
+            "id": "5cd2fe5783071a15640377f8"
+          },
+          "event_type": "response",
+          "more_data": {
+            "options": [
+              {
+                "name": "Yes",
+                "selected": false,
+                "value": "Yes"
+              },
+              {
+                "name": "No",
+                "selected": true,
+                "value": "No"
+              }
+            ]
+          },
+          "question_code": "mc:3",
+          "question_type": "q_yesno",
+          "response": "No!",
+          "response_value": "30",
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "606778C3-6202-4058-B27E-45EFCFE3C08E",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:43-05:00"
+        }
+      },
+      {
+        "data": {
+          "_id": {
+            "$type": "id",
+            "id": "5cd2fe5783071a1abb020f19"
+          },
+          "event_type": "response",
+          "more_data": {
+            "options": [
+              {
+                "name": "helo",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "name": "bye",
+                "selected": true,
+                "value": "2"
+              },
+              {
+                "name": "aloha",
+                "selected": false,
+                "value": "3"
+              },
+              {
+                "name": "D",
+                "selected": true,
+                "value": "4"
+              }
+            ]
+          },
+          "question_code": "mc:4",
+          "question_type": "q_select_multiple",
+          "response_value": "40",
+          "response_values": [
+            "2",
+            "4"
+          ],
+          "responses": [
+            "bye",
+            "D"
+          ],
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "E87BD51D-B6F1-4AED-9CC9-711DF9066CD3",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:43-05:00"
+        }
+      }
+    ],
+    "2": [
+      {
+        "data": {
+          "event_type": "response",
+          "question_code": "card:5",
+          "response_value": 50,
+          "question_type": "instruction",
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "22139CB0-4FA5-4910-8272-D4EA0BFA89EA",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:46-05:00"
+        }
+      },
+      {
+        "data": {
+          "event_type": "response",
+          "more_data": {
+            "options": [
+              {
+                "name": "hello",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "name": "goodbye",
+                "selected": true,
+                "value": "2"
+              },
+              {
+                "name": "aloha",
+                "selected": false,
+                "value": "3"
+              }
+            ]
+          },
+          "question_code": "mc:6",
+          "question_type": "q_select",
+          "response": "goodbye",
+          "response_value": "60",
+          "session": "947ACA2D-D9A6-44AE-96CC-99B8A4271BDE"
+        },
+        "metadata": {
+          "id": "3651904C-4E49-4591-963D-D0CEB27FBC6D",
+          "pt": "mark1",
+          "timestamp": "2019-05-08T11:05:46-05:00"
+        }
+      }
+    ]
+  },
+  "sourceCard": {
+    "card_type": "calculated",
+    "order": 2,
+    "section": 1,
+    "data": {
+      "title": null,
+      "text": null,
+      "icon": null,
+      "code": "calc1",
+      "color": null,
+      "tags":
+      [
+      ],
+      "i_title": null,
+      "i_text": null,
+      "serviceUrl": "http://localhost:3000",
+      "args": null
+    }
+  }
+}
