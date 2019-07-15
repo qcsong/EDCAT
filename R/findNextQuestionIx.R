@@ -1,9 +1,20 @@
 #' A facade for mirtCAT used by pilrContentApi()
+#' 
+#' # Data Files
+#' 
+#' The data/ files were extracted from MultiCATinput_EPSI_09-21-18.RData from the demo
+#' Shiny app as follows:
+#' 
+#'   load("MultiCATinput_EPSI_09-21-18.RData")
+#;   saveRDS(mmod3, 'data/mmod3.rds')
+#;   saveRDS(questions, 'data/questions')
+#;   saveRDS(options.rds, 'data/options.rds')
+#'
+#' This changes makes it more obvious what variables are being set.
 
 # mirtCAT() inputs that specify the survey
 mirtCAT.mo <- readRDS('data/mmod3.rds')
 mirtCAT.options <- readRDS('data/options.rds')
-
 mirtCAT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
                  Option = mirtCAT.options, 
                  Type = "radio", 
