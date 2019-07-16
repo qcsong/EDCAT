@@ -36,6 +36,7 @@ mirtCAT.preCAT = list(min_items = 15,
 #' @return index of the next question to ask
 #' 
 #' @import mirtCAT
+#' @export
 findNextQuestionIx <- function(questions, answers, design=list(min_SEM_0.5)) {
   if (is.null(questions)) {
     return(1)
@@ -46,7 +47,11 @@ findNextQuestionIx <- function(questions, answers, design=list(min_SEM_0.5)) {
                              preCAT = mirtCAT.preCAT,
                              design_elements = TRUE)
   updateDesign(design.elements, items=questions, responses=answers)
-  findNextItem(design.elements)
+  tryCatch({
+    findNextItem(design.elements)
+  }, 
+  # will get error if there are no more questions. Treat as if it terminated cleanly
+  error = function(err) { NA })
 }
 
 titleForQuestion <- function(questionIx) {
