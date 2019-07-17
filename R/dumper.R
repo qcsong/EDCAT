@@ -14,7 +14,7 @@
 #           class = "data.frame",
 #           row.names = c(NA,-2L)
 #         ))
-#' export
+#' @export
 dumper <- function(...) {
   dput(list(...))
 }

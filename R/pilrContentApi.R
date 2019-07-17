@@ -123,8 +123,9 @@ buildDoneCard <- function(section, title= 'Finished', text='Thank you! Please pr
 }
 
 # dump inputs passed by openCPU for use in sample-parameters.R for testing
-# dumperOld <- function(participantCode, resultsSoFar, sourceCard) {
-#   fn <- 'dumped-stuff.R'
-#   dump(c('participantCode', 'resultsSoFar', 'sourceCard'), file=fn)
-#   readChar(fn, file.info(fn)$size)
-# }
+#' @export
+dumperOld <- function(participantCode, resultsSoFar, sourceCard) {
+  fn <- 'dumped-stuff.R'
+  dump(c('participantCode', 'resultsSoFar', 'sourceCard'), file=fn)
+  readChar(fn, file.info(fn)$size)
+}
