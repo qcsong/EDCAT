@@ -43,7 +43,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     nextQuestionIx <- findNextFn(history$questions, history$answers)
 
     if (!is.numeric(nextQuestionIx)) {
-      return(buildDoneResult(section))
+      return(buildDoneResult(sourceCard$section))
     }
 
     text <- if (as.logical(param('debug', FALSE))) {
