@@ -37,18 +37,19 @@ mirtCAT.preCAT = list(min_items = 15,
 #' 
 #' @import mirtCAT
 #' @export
-findNextQuestionIx <- function(questions, answers, design=list(min_SEM_0.5)) {
+findNextQuestionIx <- function(questions, answers, design=list(min_SEM=0.5)) {
   if (is.null(questions)) {
     return(1)
   }
   
   # need to build fresh every time because update.disgn modifies it
-  design.elements <- mirtCAT(mirtCAT.df, mirtCAT.mo, 
+  CATdesign <- mirtCAT(mirtCAT.df, mirtCAT.mo, 
                              preCAT = mirtCAT.preCAT,
                              design_elements = TRUE)
-  updateDesign(design.elements, items=questions, responses=answers)
+  updateDesign(CATdesign, items=questions, responses=answers)
+  CATdesign$design@Update.thetas(CATdesign$design, CATdesign$person, CATdesign$test)
   tryCatch({
-    findNextItem(design.elements)
+    findNextItem(CATdesign)
   }, 
   # will get error if there are no more questions. Treat as if it terminated cleanly
   error = function(err) { NA })
