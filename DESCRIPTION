@@ -13,6 +13,7 @@ RoxygenNote: 6.1.1
 Exports:
     pilrContentApi,
     findNextQuestionIx
+    dumper
 Imports:
     mirt,
     mirtCAT
