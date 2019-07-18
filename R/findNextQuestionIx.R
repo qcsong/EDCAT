@@ -16,6 +16,8 @@
 #'   F1            F2        F3
 #'   [1,] 0.0000000  0.000000e+00 0.0000000
 #'   [2,] 0.1611487 -3.615848e-07 0.9306835
+#'   
+#' Look at ?mirtCAT::findNext for examples of how to modify buildMirtCatStateObject()
 #'
 #' DATA FILES
 #' 
