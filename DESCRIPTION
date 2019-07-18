@@ -5,7 +5,7 @@ Version: 0.2.0
 Author: Q. Chelsea Song
 Maintainer: Q. Chelsea Song <qianqisong@gmail.com>
 Description: Computerized adaptive test for eating disorders
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.3.3)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
