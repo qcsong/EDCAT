@@ -15,6 +15,6 @@
 #           row.names = c(NA,-2L)
 #         ))
 #' @export
-dumper <- function(...) {
-  dput(list(...))
+dumper <- function(param1=NULL, ...) {
+  dput(list(param1, ...))
 }
