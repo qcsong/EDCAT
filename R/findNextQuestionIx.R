@@ -9,11 +9,13 @@
 #'
 #' Simulate asking questions 1, 40 and 3 with responses if alaws 2.  Examine resulting state's theta history
 #'  
-#' > x <- buildMirtCatStateObject(questions=c(1, 40, 3), answers=c(2, 2, 2))
-#' > x$person$thetas_history
-#' F1            F2        F3
-#' [1,] 0.0000000  0.000000e+00 0.0000000
-#' [2,] 0.1611487 -3.615848e-07 0.9306835
+#'   > library(mirtCAT)
+#'   > source('~/Projects/EDCAT/R/findNextQuestionIx.R')
+#'   > x <- buildMirtCatStateObject(questions=c(1, 40, 3), answers=c(2, 2, 2))
+#'   > x$person$thetas_history
+#'   F1            F2        F3
+#'   [1,] 0.0000000  0.000000e+00 0.0000000
+#'   [2,] 0.1611487 -3.615848e-07 0.9306835
 #'
 #' DATA FILES
 #' 
