@@ -7,7 +7,7 @@
 #' 
 #' TUNING EXAMPLE
 #'
-#' Simulate asking questions 1, 40 and 3 with responses if alaws 2.  Examine resulting state's theta history
+#' Simulate asking questions 1, 40 and 3 with responses always option 2.  Examine resulting state's theta history
 #'  
 #'   > library(mirtCAT)
 #'   > source('~/Projects/EDCAT/R/findNextQuestionIx.R')
@@ -43,7 +43,7 @@ mirtCAT.preCAT = list(min_items = 15,
                       max_items = length(mirtCAT.df$Question),
                       criteria = 'Trule',
                       method = 'MAP',
-                      response_variance = F)
+                      response_variance = T)
 
 
 #' Calculate next question to ask
@@ -80,12 +80,15 @@ buildMirtCatStateObject <- function(questions, answers) {
   CATdesign <- mirtCAT(mirtCAT.df, mirtCAT.mo, 
                        preCAT = mirtCAT.preCAT,
                        design = list(min_SEM=0.5),
+                       start_item = 'Trule',
                        design_elements = TRUE)
   if (is.null(questions)) {
     return(CATdesign)
   }
   CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
-  CATdesign$design@Update.thetas(CATdesign$design, CATdesign$person, CATdesign$test)
+  CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
+  #   person$Update.info_mats(design=design, test=test)
+  CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
   CATdesign
 }
 
@@ -100,3 +103,4 @@ optionTextsForQuestion <- function(questionIx) {
 questionIxMatching <- function(text) {
   match(text, mirtCAT.df$Question)
 }
+
