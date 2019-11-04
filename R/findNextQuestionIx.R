@@ -32,15 +32,15 @@
 #' This changes makes it more obvious what variables are being set.
 
 # mirtCAT() inputs that specify the survey
-mirtCAT.mo <- readRDS('data/mmod3.rds')
-mirtCAT.options <- readRDS('data/options.rds')
-mirtCAT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
-                 Option = mirtCAT.options, 
+.design.mo <- readRDS('data/mmod3.rds')
+.design.options <- readRDS('data/options.rds')
+.design.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
+                 Option = .design.options, 
                  Type = "radio", 
                  stringsAsFactors = F)
 
-mirtCAT.preCAT = list(min_items = 15, 
-                      max_items = length(mirtCAT.df$Question),
+.design.preCAT = list(min_items = 2, # 15, 
+                      max_items = length(.design.df$Question),
                       criteria = 'Trule',
                       method = 'MAP',
                       response_variance = T)
@@ -59,8 +59,11 @@ mirtCAT.preCAT = list(min_items = 15,
 #' @export
 findNextQuestionIx <- function(questions, answers) {
   tryCatch({
-    CATdesign <- buildMirtCatStateObject(questions, answers)
-    findNextItem(CATdesign)
+    mcState <- buildMirtCatStateObject(questions, answers)
+    if (mcState$design@stop_now)
+      NA
+    else
+      findNextItem(mcState)
   }, 
   error = function(err) { 
     # will get error if there are no more questions. Treat as if it terminated cleanly
@@ -77,30 +80,49 @@ findNextQuestionIx <- function(questions, answers) {
 #' @return the state object x such that mirtCAT::findNextItem(x) returns the next question to be asked.
 #' 
 buildMirtCatStateObject <- function(questions, answers) {
-  CATdesign <- mirtCAT(mirtCAT.df, mirtCAT.mo, 
-                       preCAT = mirtCAT.preCAT,
+  CATdesign <- mirtCAT(.design.df, .design.mo,
+                       preCAT = .design.preCAT,
                        design = list(min_SEM=0.5),
                        start_item = 'Trule',
                        design_elements = TRUE)
   if (is.null(questions)) {
     return(CATdesign)
   }
-  CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
-  CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
-  #   person$Update.info_mats(design=design, test=test)
-  CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
+  for (i in c(1:length(questions))) {
+    CATdesign <- updateDesign(CATdesign, items=questions[i], responses=answers[i])
+    
+    # from Server.R#166...
+    
+    CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
+    CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
+    CATdesign$design <- mirtCAT:::Update.stop_now(CATdesign$design, person=CATdesign$person)
+    CATdesign$design <- mirtCAT:::Next.stage(CATdesign$design, person=CATdesign$person, test=CATdesign$test, item=i)
+  }
   CATdesign
 }
 
+# old.buildMirtCatStateObject <- function(questions, answers) {
+#   CATdesign <- mirtCAT(.design.df, .design.mo, 
+#                        preCAT = .design.preCAT,
+#                        design = list(min_SEM=0.5),
+#                        start_item = 'Trule',
+#                        design_elements = TRUE)
+#   if (is.null(questions)) {
+#     return(CATdesign)
+#   }
+#   CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
+#   CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
+#   CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
+#   CATdesign
+# }
 titleForQuestion <- function(questionIx) {
-  mirtCAT.df$Question[[questionIx]]
+  .design.df$Question[[questionIx]]
 }
 
 optionTextsForQuestion <- function(questionIx) {
-  mirtCAT.options[questionIx,]
+  .design.options[questionIx,]
 }
 
 questionIxMatching <- function(text) {
-  match(text, mirtCAT.df$Question)
+  match(text, .design.df$Question)
 }
-
