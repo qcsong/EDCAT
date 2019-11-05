@@ -31,9 +31,11 @@
 #'
 #' This changes makes it more obvious what variables are being set.
 
-# mirtCAT() inputs that specify the survey
+# mirtCAT() input parameters that specify the survey
 .design.mo <- readRDS('data/mmod3.rds')
 .design.options <- readRDS('data/options.rds')
+.design.design = list(min_SEM=0.5)
+.design.start_item = 'Trule'
 .design.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
                  Option = .design.options, 
                  Type = "radio", 
@@ -82,8 +84,8 @@ findNextQuestionIx <- function(questions, answers) {
 buildMirtCatStateObject <- function(questions, answers) {
   CATdesign <- mirtCAT(.design.df, .design.mo,
                        preCAT = .design.preCAT,
-                       design = list(min_SEM=0.5),
-                       start_item = 'Trule',
+                       design = .design.design,
+                       start_item = .design.start_item,
                        design_elements = TRUE)
   if (is.null(questions)) {
     return(CATdesign)
@@ -125,4 +127,20 @@ optionTextsForQuestion <- function(questionIx) {
 
 questionIxMatching <- function(text) {
   match(text, .design.df$Question)
+}
+
+# Run the orign, shiny version of same test
+shiningPath <- function() {
+  GUI = list(title = "Shiny Survey",
+             authors = "",
+             stem_default_format = shiny::h5,
+             lastpage = function(person){return(list(h5("Thanks for taking the survey.
+                                                      To exit, please click the action button")))},
+             time_before_answer = 3 # minimum amount of time for answering
+  )
+  mirtCAT(.design.df, .design.mo,
+          preCAT = .design.preCAT,
+          design = .design.design,
+          start_item = .design.start_item,
+          shinyGUI = GUI)
 }
