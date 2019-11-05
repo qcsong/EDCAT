@@ -39,7 +39,7 @@
                  Type = "radio", 
                  stringsAsFactors = F)
 
-.design.preCAT = list(min_items = 2, # 15, 
+.design.preCAT = list(min_items = 15, 
                       max_items = length(.design.df$Question),
                       criteria = 'Trule',
                       method = 'MAP',
