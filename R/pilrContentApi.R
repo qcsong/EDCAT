@@ -105,7 +105,7 @@ buildSelectCard <- function(questionIx, section, text) {
 optionListForQuestion <- function(questionIx) {
   # Convert mirtCAT options [dataframe columns named 'Option-0', etc] to card options
   text <- optionTextsForQuestion(questionIx)
-  value <- c(0:length(text) - 1)
+  value <- 0:(length(text) - 1)
   data.frame(text=text, value=value, order=value)
 }
 
