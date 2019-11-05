@@ -58,7 +58,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     list(result=list(calculatedCard, nextCalcCard))
   },
   error = function(error_condition) {
-    list(error=error_condition)
+    list(error=as.character(error_condition))
   })
 }
 
