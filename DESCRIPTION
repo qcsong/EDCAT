@@ -1,8 +1,8 @@
 Package: EDCAT
 Type: Package
 Title: Computerized adaptive test for eating disorders
-Version: 0.6.0
-Author: Q. Chelsea Song
+Version: 1.0.0
+Author: Q. Chelsea Song and Mark Mendel
 Maintainer: Q. Chelsea Song <qianqisong@gmail.com> and Mark Mendel <mmendel@meinergy.com>
 Description: Computerized adaptive test for eating disorders
 Depends: R (>= 3.3.3)
