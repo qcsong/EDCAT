@@ -58,7 +58,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     list(result=list(calculatedCard, nextCalcCard))
   },
   error = function(error_condition) {
-    list(error=error_condition)
+    list(error=as.character(error_condition))
   })
 }
 
@@ -105,7 +105,7 @@ buildSelectCard <- function(questionIx, section, text) {
 optionListForQuestion <- function(questionIx) {
   # Convert mirtCAT options [dataframe columns named 'Option-0', etc] to card options
   text <- optionTextsForQuestion(questionIx)
-  value <- c(1:length(text))
+  value <- as.character(0:(length(text) - 1))
   data.frame(text=text, value=value, order=value)
 }
 

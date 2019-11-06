@@ -7,7 +7,7 @@
 #' 
 #' TUNING EXAMPLE
 #'
-#' Simulate asking questions 1, 40 and 3 with responses if alaws 2.  Examine resulting state's theta history
+#' Simulate asking questions 1, 40 and 3 with responses always option 2.  Examine resulting state's theta history
 #'  
 #'   > library(mirtCAT)
 #'   > source('~/Projects/EDCAT/R/findNextQuestionIx.R')
@@ -31,19 +31,21 @@
 #'
 #' This changes makes it more obvious what variables are being set.
 
-# mirtCAT() inputs that specify the survey
-mirtCAT.mo <- readRDS('data/mmod3.rds')
-mirtCAT.options <- readRDS('data/options.rds')
-mirtCAT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
-                 Option = mirtCAT.options, 
+# mirtCAT() input parameters that specify the survey
+.INPUT.mo <- readRDS('data/mmod3.rds')
+.INPUT.options <- readRDS('data/options.rds')
+.INPUT.design = list(min_SEM=0.5)
+.INPUT.start_item = 'Trule'
+.INPUT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
+                 Option = .INPUT.options, 
                  Type = "radio", 
                  stringsAsFactors = F)
 
-mirtCAT.preCAT = list(min_items = 15, 
-                      max_items = length(mirtCAT.df$Question),
+.INPUT.preCAT = list(min_items = 15, 
+                      max_items = length(.INPUT.df$Question),
                       criteria = 'Trule',
                       method = 'MAP',
-                      response_variance = F)
+                      response_variance = T)
 
 
 #' Calculate next question to ask
@@ -59,8 +61,11 @@ mirtCAT.preCAT = list(min_items = 15,
 #' @export
 findNextQuestionIx <- function(questions, answers) {
   tryCatch({
-    CATdesign <- buildMirtCatStateObject(questions, answers)
-    findNextItem(CATdesign)
+    mcState <- buildMirtCatStateObject(questions, answers)
+    if (mcState$design@stop_now)
+      NA
+    else
+      findNextItem(mcState)
   }, 
   error = function(err) { 
     # will get error if there are no more questions. Treat as if it terminated cleanly
@@ -77,26 +82,65 @@ findNextQuestionIx <- function(questions, answers) {
 #' @return the state object x such that mirtCAT::findNextItem(x) returns the next question to be asked.
 #' 
 buildMirtCatStateObject <- function(questions, answers) {
-  CATdesign <- mirtCAT(mirtCAT.df, mirtCAT.mo, 
-                       preCAT = mirtCAT.preCAT,
-                       design = list(min_SEM=0.5),
+  CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo,
+                       preCAT = .INPUT.preCAT,
+                       design = .INPUT.design,
+                       start_item = .INPUT.start_item,
                        design_elements = TRUE)
   if (is.null(questions)) {
     return(CATdesign)
   }
-  CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
-  CATdesign$design@Update.thetas(CATdesign$design, CATdesign$person, CATdesign$test)
+  for (i in c(1:length(questions))) {
+    CATdesign <- updateDesign(CATdesign, items=questions[i], responses=answers[i])
+    
+    # from Server.R#166...
+    
+    CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
+    CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
+    CATdesign$design <- mirtCAT:::Update.stop_now(CATdesign$design, person=CATdesign$person)
+    CATdesign$design <- mirtCAT:::Next.stage(CATdesign$design, person=CATdesign$person, test=CATdesign$test, item=i)
+  }
   CATdesign
 }
 
+# old.buildMirtCatStateObject <- function(questions, answers) {
+#   CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo, 
+#                        preCAT = .INPUT.preCAT,
+#                        design = list(min_SEM=0.5),
+#                        start_item = 'Trule',
+#                        design_elements = TRUE)
+#   if (is.null(questions)) {
+#     return(CATdesign)
+#   }
+#   CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
+#   CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
+#   CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
+#   CATdesign
+# }
 titleForQuestion <- function(questionIx) {
-  mirtCAT.df$Question[[questionIx]]
+  .INPUT.df$Question[[questionIx]]
 }
 
 optionTextsForQuestion <- function(questionIx) {
-  mirtCAT.options[questionIx,]
+  .INPUT.options[questionIx,]
 }
 
 questionIxMatching <- function(text) {
-  match(text, mirtCAT.df$Question)
+  match(text, .INPUT.df$Question)
+}
+
+# Run the original, shiny version of same test with the same input parameters (specified by .INPUT.*)
+shiningPath <- function() {
+  GUI = list(title = "Shiny Survey",
+             authors = "",
+             stem_default_format = shiny::h5,
+             lastpage = function(person){return(list(h5("Thanks for taking the survey.
+                                                      To exit, please click the action button")))},
+             time_before_answer = 3 # minimum amount of time for answering
+  )
+  mirtCAT(.INPUT.df, .INPUT.mo,
+          preCAT = .INPUT.preCAT,
+          design = .INPUT.design,
+          start_item = .INPUT.start_item,
+          shinyGUI = GUI)
 }

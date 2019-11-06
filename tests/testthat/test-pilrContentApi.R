@@ -110,6 +110,7 @@ test_that("same results shiny version when no repsonses to mirtCAT questions so 
   expect_equal(length(result$result), 2)
   expect_equal(result$result[[1]]$data$code, 'mc:1')
   expect_equal(result$result[[1]]$data$title, ' I did not like how clothes fit the shape of my body')
+  expect_equal(levels(result$result[[1]]$data$options$value), as.character(0:4))
 })
 
 
