@@ -41,9 +41,12 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     }
     r <- findNextFn(history$questions, history$answers)
     nextQuestionIx <- r$questionIx
+    extraValues <- r$extraValues
 
     if (!is.numeric(nextQuestionIx)) {
-      return(buildDoneResult(sourceCard$section))
+      return(list(
+        cards=buildDoneResult(sourceCard$section),
+        extra_values=extraValues))
     }
 
     text <- if (as.logical(param('debug', FALSE))) {
@@ -55,7 +58,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
 
-    list(result=list(calculatedCard, nextCalcCard))
+    list(cards=list(calculatedCard, nextCalcCard))
   },
   error = function(error_condition) {
     list(error=as.character(error_condition))

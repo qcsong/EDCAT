@@ -65,14 +65,17 @@ findNextQuestionIx <- function(questions, answers) {
            extra.values=list())
     mcState <- buildMirtCatStateObject(questions, answers)
     if (mcState$design@stop_now) {
-      list(questionIx=NA) 
+      list(questionIx=NA,
+           extraValues=buildExtraValues(mcState)) 
     } else {
-      list(questionIx=findNextItem(mcState))
+      list(questionIx=findNextItem(mcState), 
+           extraValues=list())
     }
   }, 
   error = function(err) { 
     # will get error if there are no more questions. Treat as if it terminated cleanly
-    list(questionIx=NA) 
+    list(questionIx=NA, 
+         extraValues=buildExtraValues(mcState)) 
   })
 }
 
@@ -104,6 +107,26 @@ buildMirtCatStateObject <- function(questions, answers) {
     CATdesign$design <- mirtCAT:::Next.stage(CATdesign$design, person=CATdesign$person, test=CATdesign$test, item=i)
   }
   CATdesign
+}
+
+buildExtraValues <- function(mcState) {
+  terminatedOK <- if (mcState$design@stop_now) 'yes' else 'no'
+  thetas <- unname(mcState$person$thetas[1,])
+  SE_thetas <- unname(mcState$person$thetas_SE_history[nrow(mcState$person$thetas_SE_history),])
+  list(
+    list(question_code='terminated_successfully',
+         question_type='q_yesno',
+         response= terminatedOK,
+         response_value=terminatedOK),
+    list(question_code='thetas',
+         question_type='numbers',
+         responses= as.character(thetas),
+         response_values=thetas),
+    list(question_code='SE_thetas',
+         question_type='numbers',
+         responses= as.character(SE_thetas),
+         response_values=SE_thetas)
+  ) 
 }
 
 titleForQuestion <- function(questionIx) {
