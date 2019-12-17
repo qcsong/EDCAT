@@ -36,16 +36,16 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     history <- buildHistory(resultsSoFar)
 
     # For testing
-    if(nrow(history) >= param('maxQuestions', 1e6)) {
-      return(buildDoneResult(sourceCard$section))
-    }
-    r <- findNextFn(history$questions, history$answers)
+    # if(nrow(history) >= param('maxQuestions', 1e6)) {
+    #   return(buildDoneResult(sourceCard$section))
+    # }
+    r <- findNextFn(history$questions, history$answers, param('maxQuestions', 1e6))
     nextQuestionIx <- r$questionIx
     extraValues <- r$extraValues
 
     if (!is.numeric(nextQuestionIx)) {
       return(list(
-        cards=buildDoneResult(sourceCard$section),
+        cards=list(buildDoneCard(sourceCard$section)),
         extra_values=extraValues))
     }
 
@@ -110,10 +110,6 @@ optionListForQuestion <- function(questionIx) {
   text <- optionTextsForQuestion(questionIx)
   value <- as.character(0:(length(text) - 1))
   data.frame(text=text, value=value, order=value)
-}
-
-buildDoneResult <- function(section) {
-  list(result=list(buildDoneCard(section)))
 }
 
 buildDoneCard <- function(section, title= 'Finished', text='Thank you! Please press submit to send results.') {

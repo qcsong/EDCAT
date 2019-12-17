@@ -51,20 +51,20 @@
 #' Calculate next question to ask
 #' 
 #' 
-#' @param questions is a vector of the indicies of the questions answered so far
-#' 
+#' @param questionsAsked is a vector of the indicies of the questions answered so far
 #' @param answers is a vector of the responses to corresponding questions
-#' 
+#' @param maxQuestions is for debugging. It causes findNextQuestion to pretend that mirtCAT terminated the test
+#'                     after answering this many questions.
 #' @return index of the next question to ask
 #' 
 #' @import mirtCAT
 #' @export
-findNextQuestionIx <- function(questions, answers) {
+findNextQuestionIx <- function(questionsAsked, answers, maxQuestions = 10000) {
   tryCatch({
       list(index=NA, 
            extra.values=list())
-    mcState <- buildMirtCatStateObject(questions, answers)
-    if (mcState$design@stop_now) {
+    mcState <- buildMirtCatStateObject(questionsAsked, answers)
+    if (mcState$design@stop_now || length(questionsAsked) >= maxQuestions) {
       list(questionIx=NA,
            extraValues=buildExtraValues(mcState)) 
     } else {
@@ -81,23 +81,23 @@ findNextQuestionIx <- function(questions, answers) {
 
 #' Construct the object that enapsulate the state of mirtCAT survey from responses so far
 #' 
-#' @param questions is a vector of the indicies of the questions that have been answered
+#' @param questionsAsked is a vector of the indicies of the questions that have been answered
 #' 
 #' @paaram answers is a vector of the indicies of the responses
 #' 
 #' @return the state object x such that mirtCAT::findNextItem(x) returns the next question to be asked.
 #' 
-buildMirtCatStateObject <- function(questions, answers) {
+buildMirtCatStateObject <- function(questionsAsked, answers) {
   CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo,
                        preCAT = .INPUT.preCAT,
                        design = .INPUT.design,
                        start_item = .INPUT.start_item,
                        design_elements = TRUE)
-  if (is.null(questions)) {
+  if (is.null(questionsAsked)) {
     return(CATdesign)
   }
-  for (i in c(1:length(questions))) {
-    CATdesign <- updateDesign(CATdesign, items=questions[i], responses=answers[i])
+  for (i in c(1:length(questionsAsked))) {
+    CATdesign <- updateDesign(CATdesign, items=questionsAsked[i], responses=answers[i])
     
     # from Server.R#166...
     

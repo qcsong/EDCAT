@@ -38,8 +38,8 @@ test_that("returns Done card if  params.maxQuestions already asked", {
   calcContentCard$data$args <- '{ "maxQuestions": 2 }'
   
   result <- pilrContentApi('myPt', resultsSoFar, calcContentCard)
-  expect_equal(length(result$result), 1)
-  expect_equal(result$result[[1]]$card_type, 'instruction')
+  expect_equal(length(result$cards), 1)
+  expect_equal(result$cards[[1]]$card_type, 'instruction')
 })
 
 test_that("returns correct question as a card", {
