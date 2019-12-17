@@ -68,6 +68,7 @@ findNextQuestionIx <- function(questions, answers) {
       findNextItem(mcState)
   }, 
   error = function(err) { 
+    str(err)
     # will get error if there are no more questions. Treat as if it terminated cleanly
     NA 
   })
