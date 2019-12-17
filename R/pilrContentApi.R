@@ -39,8 +39,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     if(nrow(history) >= param('maxQuestions', 1e6)) {
       return(buildDoneResult(sourceCard$section))
     }
-    
-    nextQuestionIx <- findNextFn(history$questions, history$answers)
+    r <- findNextFn(history$questions, history$answers)
+    nextQuestionIx <- r$questionIx
 
     if (!is.numeric(nextQuestionIx)) {
       return(buildDoneResult(sourceCard$section))

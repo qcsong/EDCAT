@@ -61,15 +61,18 @@
 #' @export
 findNextQuestionIx <- function(questions, answers) {
   tryCatch({
+      list(index=NA, 
+           extra.values=list())
     mcState <- buildMirtCatStateObject(questions, answers)
-    if (mcState$design@stop_now)
-      NA
-    else
-      findNextItem(mcState)
+    if (mcState$design@stop_now) {
+      list(questionIx=NA) 
+    } else {
+      list(questionIx=findNextItem(mcState))
+    }
   }, 
   error = function(err) { 
     # will get error if there are no more questions. Treat as if it terminated cleanly
-    NA 
+    list(questionIx=NA) 
   })
 }
 
@@ -103,20 +106,6 @@ buildMirtCatStateObject <- function(questions, answers) {
   CATdesign
 }
 
-# old.buildMirtCatStateObject <- function(questions, answers) {
-#   CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo, 
-#                        preCAT = .INPUT.preCAT,
-#                        design = list(min_SEM=0.5),
-#                        start_item = 'Trule',
-#                        design_elements = TRUE)
-#   if (is.null(questions)) {
-#     return(CATdesign)
-#   }
-#   CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
-#   CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
-#   CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
-#   CATdesign
-# }
 titleForQuestion <- function(questionIx) {
   .INPUT.df$Question[[questionIx]]
 }
