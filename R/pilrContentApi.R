@@ -45,7 +45,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
 
     if (!is.numeric(nextQuestionIx)) {
       return(list(
-        cards=list(buildDoneCard(sourceCard$section)),
+        #cards=list(buildDoneCard(sourceCard$section)),
+        result=list(buildDoneCard(sourceCard$section)),
         extra_values=extraValues))
     }
 
@@ -58,7 +59,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
 
-    list(cards=list(calculatedCard, nextCalcCard))
+    #list(cards=list(calculatedCard, nextCalcCard))
+    list(result=list(calculatedCard, nextCalcCard))
   },
   error = function(error_condition) {
     list(error=as.character(error_condition))
