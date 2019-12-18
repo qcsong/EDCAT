@@ -38,8 +38,8 @@ test_that("returns Done card if  params.maxQuestions already asked", {
   calcContentCard$data$args <- '{ "maxQuestions": 2 }'
   
   result <- pilrContentApi('myPt', resultsSoFar, calcContentCard)
-  expect_equal(length(result$cards), 1)
-  expect_equal(result$cards[[1]]$card_type, 'instruction')
+  expect_equal(length(result$result), 1)
+  expect_equal(result$result[[1]]$card_type, 'instruction')
 })
 
 test_that("returns correct question as a card", {
@@ -107,10 +107,10 @@ test_that("same results shiny version when no repsonses to mirtCAT questions so 
                      response_value=c(NA, '2', '3', '4'),
                      question_type=c('information', 'instruction', 'q_yesno', 'q_select_multiple'))) )
   result <- pilrContentApi('ignored', responses, sourceCard)
-  expect_equal(length(result$cards), 2)
-  expect_equal(result$cards[[1]]$data$code, 'mc:1')
-  expect_equal(result$cards[[1]]$data$title, ' I did not like how clothes fit the shape of my body')
-  expect_equal(levels(result$cards[[1]]$data$options$value), as.character(0:4))
+  expect_equal(length(result$result), 2)
+  expect_equal(result$result[[1]]$data$code, 'mc:1')
+  expect_equal(result$result[[1]]$data$title, ' I did not like how clothes fit the shape of my body')
+  expect_equal(levels(result$result[[1]]$data$options$value), as.character(0:4))
 })
 
 
