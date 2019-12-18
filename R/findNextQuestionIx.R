@@ -61,8 +61,6 @@
 #' @export
 findNextQuestionIx <- function(questionsAsked, answers, maxQuestions = 10000) {
   tryCatch({
-      list(index=NA, 
-           extra.values=list())
     mcState <- buildMirtCatStateObject(questionsAsked, answers)
     if (mcState$design@stop_now || length(questionsAsked) >= maxQuestions) {
       list(questionIx=NA,
