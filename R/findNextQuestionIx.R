@@ -51,48 +51,52 @@
 #' Calculate next question to ask
 #' 
 #' 
-#' @param questions is a vector of the indicies of the questions answered so far
-#' 
+#' @param questionsAsked is a vector of the indicies of the questions answered so far
 #' @param answers is a vector of the responses to corresponding questions
-#' 
+#' @param maxQuestions is for debugging. It causes findNextQuestion to pretend that mirtCAT terminated the test
+#'                     after answering this many questions.
 #' @return index of the next question to ask
 #' 
 #' @import mirtCAT
 #' @export
-findNextQuestionIx <- function(questions, answers) {
+findNextQuestionIx <- function(questionsAsked, answers, maxQuestions = 10000) {
   tryCatch({
-    mcState <- buildMirtCatStateObject(questions, answers)
-    if (mcState$design@stop_now)
-      NA
-    else
-      findNextItem(mcState)
+    mcState <- buildMirtCatStateObject(questionsAsked, answers)
+    if (mcState$design@stop_now || length(questionsAsked) >= maxQuestions) {
+      list(questionIx=NA,
+           extraValues=buildExtraValues(mcState)) 
+    } else {
+      list(questionIx=findNextItem(mcState), 
+           extraValues=list())
+    }
   }, 
   error = function(err) { 
     str(err)
     # will get error if there are no more questions. Treat as if it terminated cleanly
-    NA 
+    list(questionIx=NA, 
+         extraValues=buildExtraValues(mcState)) 
   })
 }
 
 #' Construct the object that enapsulate the state of mirtCAT survey from responses so far
 #' 
-#' @param questions is a vector of the indicies of the questions that have been answered
+#' @param questionsAsked is a vector of the indicies of the questions that have been answered
 #' 
 #' @paaram answers is a vector of the indicies of the responses
 #' 
 #' @return the state object x such that mirtCAT::findNextItem(x) returns the next question to be asked.
 #' 
-buildMirtCatStateObject <- function(questions, answers) {
+buildMirtCatStateObject <- function(questionsAsked, answers) {
   CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo,
                        preCAT = .INPUT.preCAT,
                        design = .INPUT.design,
                        start_item = .INPUT.start_item,
                        design_elements = TRUE)
-  if (is.null(questions)) {
+  if (is.null(questionsAsked)) {
     return(CATdesign)
   }
-  for (i in c(1:length(questions))) {
-    CATdesign <- updateDesign(CATdesign, items=questions[i], responses=answers[i])
+  for (i in c(1:length(questionsAsked))) {
+    CATdesign <- updateDesign(CATdesign, items=questionsAsked[i], responses=answers[i])
     
     # from Server.R#166...
     
@@ -104,20 +108,26 @@ buildMirtCatStateObject <- function(questions, answers) {
   CATdesign
 }
 
-# old.buildMirtCatStateObject <- function(questions, answers) {
-#   CATdesign <- mirtCAT(.INPUT.df, .INPUT.mo, 
-#                        preCAT = .INPUT.preCAT,
-#                        design = list(min_SEM=0.5),
-#                        start_item = 'Trule',
-#                        design_elements = TRUE)
-#   if (is.null(questions)) {
-#     return(CATdesign)
-#   }
-#   CATdesign <- updateDesign(CATdesign, items=questions, responses=answers)
-#   CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
-#   CATdesign$person$Update.info_mats(design=CATdesign$design, test=CATdesign$test)
-#   CATdesign
-# }
+buildExtraValues <- function(mcState) {
+  terminatedOK <- if (mcState$design@stop_now) 'yes' else 'no'
+  thetas <- unname(mcState$person$thetas[1,])
+  SE_thetas <- unname(mcState$person$thetas_SE_history[nrow(mcState$person$thetas_SE_history),])
+  list(
+    list(question_code='terminated_successfully',
+         question_type='q_yesno',
+         response= terminatedOK,
+         response_value=terminatedOK),
+    list(question_code='thetas',
+         question_type='numbers',
+         responses= as.character(thetas),
+         response_values=thetas),
+    list(question_code='SE_thetas',
+         question_type='numbers',
+         responses= as.character(SE_thetas),
+         response_values=SE_thetas)
+  ) 
+}
+
 titleForQuestion <- function(questionIx) {
   .INPUT.df$Question[[questionIx]]
 }
