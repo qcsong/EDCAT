@@ -1,5 +1,8 @@
 context('findNextQuestionIx')
 
+setwd('../..')
+initializeSurvey('epsi')
+
 test_that("yields same sample question sequence as shiningPath()", {
   result <- findNextQuestionIx(questions = c(), answers = c())
   expect_equal(1, result$questionIx )

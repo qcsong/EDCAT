@@ -32,20 +32,36 @@
 #' This changes makes it more obvious what variables are being set.
 
 # mirtCAT() input parameters that specify the survey
-.INPUT.mo <- readRDS('data/mmod3.rds')
-.INPUT.options <- readRDS('data/options.rds')
-.INPUT.design = list(min_SEM=0.5)
-.INPUT.start_item = 'Trule'
-.INPUT.df <- data.frame(Question = as.vector(readRDS('data/questions.rds')), 
-                 Option = .INPUT.options, 
-                 Type = "radio", 
-                 stringsAsFactors = F)
-
-.INPUT.preCAT = list(min_items = 15, 
-                      max_items = length(.INPUT.df$Question),
-                      criteria = 'Trule',
-                      method = 'MAP',
-                      response_variance = T)
+.INPUT.mo <- NULL
+.INPUT.options <- NULL
+.INPUT.design = NULL
+.INPUT.start_item = NULL
+.INPUT.df <- NULL 
+.INPUT.preCAT <- NULL
+                        
+loadedDataDir <- ''
+# Load the input parameters that specify the surve from given data subdirectory
+initializeSurvey <- function(dataDir) {
+  if (loadedDataDir == dataDir) {
+    return
+  }
+  loadedDataDir <<- dataDir
+  read.data <- function(base.name) { readRDS(paste0('data/', dataDir, '/', base.name)) }
+  .INPUT.mo <<- read.data('mmod3.rds')
+  .INPUT.options <<- read.data('options.rds')
+  .INPUT.design <<- list(min_SEM=0.5)
+  .INPUT.start_item <<- 'Trule'
+  .INPUT.df <<- data.frame(Question = as.vector(read.data('questions.rds')), 
+                          Option = .INPUT.options, 
+                          Type = "radio", 
+                          stringsAsFactors = F)
+  
+  .INPUT.preCAT <<- list(min_items = 15, 
+                       max_items = length(.INPUT.df$Question),
+                       criteria = 'Trule',
+                       method = 'MAP',
+                       response_variance = T)
+}
 
 
 #' Calculate next question to ask
