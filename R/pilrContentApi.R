@@ -39,7 +39,8 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     # if(nrow(history) >= param('maxQuestions', 1e6)) {
     #   return(buildDoneResult(sourceCard$section))
     # }
-    r <- findNextFn(history$questions, history$answers, param('maxQuestions', 1e6))
+    r <- findNextFn(history$questions, history$answers, param('maxQuestions', 1e6),
+                    survey = param('survey', 'epsi'))
     nextQuestionIx <- r$questionIx
     extraValues <- r$extraValues
 
