@@ -4,8 +4,8 @@ findNextQuestionDF <- function(qs, as, survey) {
   lst <- findNextQuestionIx(qs, as, survey=survey)
   df <- lst$questionInfo
   df$ix <- lst$questionIx
-  df
-  #data.frame(ix=lst$questionIx, title=lst$questionText, stringsAsFactors = FALSE)
+  row.names(df) = NULL
+  df[c('ix', 'Question')]
 }
 
 #' Simulate tests
