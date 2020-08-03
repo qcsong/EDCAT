@@ -150,6 +150,7 @@ shiningPath <- function(survey = 'epsi') {
   loaded.survey <- ''
   survey.def <- NULL
   fn <- function(survey) {
+    survey = unlist(survey)
     if (loaded.survey != survey) {
       print(paste('loading survey:', survey))
       read.data <- function(base.name) { 
