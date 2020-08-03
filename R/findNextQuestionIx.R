@@ -51,7 +51,9 @@ findNextQuestionIx <- function(questionsAsked, answers, maxQuestions = 10000, su
       list(questionIx=NA,
            extraValues=buildExtraValues(mcState))
     } else {
-      list(questionIx=findNextItem(mcState),
+      ix <- findNextItem(mcState)
+      list(questionIx=ix,
+           questionInfo=survey.defintition(survey)$df[ix,],
            extraValues=list())
     }
   },
