@@ -57,7 +57,7 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     } else {
       ''
     }
-    calculatedCard <- buildSelectCard(nextQuestionIx, questionInfo, sourceCard$section, text) 
+    calculatedCard <- buildSelectCard(nextQuestionIx, nextQuestionInfo, sourceCard$section, text) 
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
 
