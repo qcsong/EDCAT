@@ -153,8 +153,23 @@ shiningPath <- function(survey = 'epsi') {
     survey = unlist(survey)
     if (loaded.survey != survey) {
       print(paste('loading survey:', survey))
-      load(paste0('data/', survey, '.RData')) 
-      survey.def <<- surveySpec
+      read.data <- function(base.name) { 
+        readRDS(paste0('data/', survey, '-', base.name)) 
+      }
+      options <- read.data('options.rds')
+      questions <- as.vector(read.data('questions.rds'))
+      
+      survey.def <<- list(
+        mo = read.data('mmod3.rds'),
+        options = read.data('options.rds'),
+        design = list(min_SEM=0.5),
+        start_item = 'Trule',
+        df = data.frame(Question = questions, Option = options, Type = "radio", stringsAsFactors = F),
+        preCAT = list(min_items = 15,
+                      max_items = length(questions),
+                      criteria = 'Trule',
+                      method = 'MAP',
+                      response_variance = T) )
       loaded.survey <<- survey
     }
     return(survey.def)
