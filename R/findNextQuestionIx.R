@@ -86,6 +86,9 @@ buildMirtCatStateObject <- function(questionsAsked, answers, survey = 'idas') {
   for (i in c(1:length(questionsAsked))) {
     CATdesign <- updateDesign(CATdesign, items=questionsAsked[i], responses=answers[i])
 
+    # NOTE: newer, broken mirtCAT changed param names:
+    # CATdesign <- updateDesign(CATdesign, new_item=questionsAsked[i], new_response=answers[i])
+
     # from Server.R#166...
 
     CATdesign$design@Update.thetas(design=CATdesign$design, person=CATdesign$person, test=CATdesign$test)
@@ -128,7 +131,7 @@ questionIxMatching <- function(text, survey.def) {
   match(text, survey.def$df$Question)
 }
 
-# Run the original, shiny version of same test with the same input parameters 
+# Run the original, shiny version of same test with the same input parameters
 shiningPath <- function(survey = 'epsi') {
   GUI = list(title = "Shiny Survey",
              authors = "",

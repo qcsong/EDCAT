@@ -16,7 +16,7 @@ Exports:
     dumper,
     dumperOld
 Imports:
-    mirt (== 1.30.5),
+    mirt (== 1.30),
     mirtCAT (== 1.9.3)
 Suggests:
     BH (== 1.69.0-1),

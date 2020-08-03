@@ -9,15 +9,21 @@ PiLR EMA surveys can delegate their content to a service implement the API defin
 The function pilrContentApi() implments the API when invoked via openCPU.
 
 ## Install on openCPU server
-Install on openCPU.pilrhealth.com:
+Install on ocpu.pilrhealth.com:
 
     TOKEN="<your github personal access token>"
     install() {
       sudo R_LIB='/usr/lib/R/site-library:/usr/lib/opencpu/library' Rscript --slave --no-save --no-restore-history -e "library(devtools) ; install_github(repo='$1', auth_token='$TOKEN')"
     }
-    install philchalmers/mirt
-    install philchalmers/mirtcat
     install MeiResearchLtd/EDCAT
+
+Newer
+
+    sudo Rscript --slave --no-save --no-restore-history -e '
+      library(remotes)
+      install_github(repo="https://github.com/philchalmers/mirt.git", ref="v1.30", force=TRUE)
+      install_github(repo="https://github.com/philchalmers/mirtCAT.git", ref="v1.9.3", force=TRUE)
+      install_github(repo="https://github.com/MeiResearchLtd/EDCAT.git")'
 
 ## Testing with Curl
 
@@ -26,6 +32,7 @@ console. They can be submitted with the following command.
 
     curl -H"Content-Type":"application/json" -d @request.json \
           https://ocpu.pilrhealth.com/ocpu/library/EDCAT/R/pilrContentApi/json
+
 
 ## JSON to R Translation
 
