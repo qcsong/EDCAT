@@ -154,7 +154,7 @@ shiningPath <- function(survey = 'epsi') {
     if (loaded.survey != survey) {
       print(paste('loading survey:', survey))
       read.data <- function(base.name) { 
-        readRDS(paste0('data/', survey, '/', base.name)) 
+        readRDS(paste0('data/', survey, '-', base.name)) 
       }
       options <- read.data('options.rds')
       questions <- as.vector(read.data('questions.rds'))
