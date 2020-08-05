@@ -132,6 +132,7 @@ questionIxMatching <- function(text, survey.def) {
 }
 
 # Run the original, shiny version of same test with the same input parameters
+#' @export
 shiningPath <- function(survey = 'epsi') {
   GUI = list(title = "Shiny Survey",
              authors = "",

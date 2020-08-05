@@ -8,7 +8,14 @@ findNextQuestionDF <- function(qs, as, survey) {
   df[c('ix', 'Question')]
 }
 
-#' Simulate tests
+#' Simulate running the test using findNextQuestionIx
+#' runtTest(3, survey='idas') will run findNextQuestionIx for the first 3 test questions choosing
+#'                            response 1. It outputs the sequence of questions 
+#' @param stepCount is number of questions to calculate
+#' @param answers is a vector of response indices. It defaults to all 1s.
+#' @parm survey is either 'epsi' or 'idas'.  Defaults to 'epsi'
+#'                  
+#' @export
 runTest <- function (stepCount=1, answers =  c(rep(1,stepCount)), survey = 'epsi') {
   result = findNextQuestionDF(c(), c(), survey=survey)
   for (i in seq(stepCount)) {

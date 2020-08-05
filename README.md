@@ -21,6 +21,7 @@ Newer
 
     sudo Rscript --slave --no-save --no-restore-history -e '
       library(remotes)
+      remove.packages(c('mirt', 'mirtCAT', 'EDCAT')
       install_github(repo="https://github.com/philchalmers/mirt.git", ref="v1.30", force=TRUE)
       install_github(repo="https://github.com/philchalmers/mirtCAT.git", ref="v1.9.3", force=TRUE)
       install_github(repo="https://github.com/MeiResearchLtd/EDCAT.git")'

@@ -13,6 +13,8 @@ RoxygenNote: 6.1.1
 Exports:
     pilrContentApi,
     findNextQuestionIx,
+    runTest,
+    shiningPath,
     dumper,
     dumperOld
 Imports:
