@@ -39,9 +39,9 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
     # if(nrow(history) >= param('maxQuestions', 1e6)) {
     #   return(buildDoneResult(sourceCard$section))
     # }
-    r <- findNextFn(history$questions, history$answers, param('maxQuestions', 1e6))
+    r <- findNextFn(history$questions, history$answers, param('maxQuestions', 1e6),
+                    survey = param('survey', 'epsi'))
     nextQuestionIx <- r$questionIx
-    extraValues <- r$extraValues
 
     if (!is.numeric(nextQuestionIx)) {
       return(list(
@@ -49,13 +49,15 @@ pilrContentApi <- function(participantCode, resultsSoFar, sourceCard,
         result=list(buildDoneCard(sourceCard$section)),
         extra_values=extraValues))
     }
-
+    nextQuestionInfo <- r$questionInfo
+    extraValues <- r$extraValues
+    
     text <- if (as.logical(param('debug', FALSE))) {
       paste0('(question #', nextQuestionIx, ')') 
     } else {
       ''
     }
-    calculatedCard <- buildSelectCard(nextQuestionIx, sourceCard$section, text) 
+    calculatedCard <- buildSelectCard(nextQuestionIx, nextQuestionInfo, sourceCard$section, text) 
     nextCalcCard <- sourceCard
     nextCalcCard$section <- nextCalcCard$section + 1
 
@@ -96,20 +98,20 @@ buildHistory = function(resultsSoFar) {
   data.frame(questions, answers)
 }
 
-buildSelectCard <- function(questionIx, section, text) {
+buildSelectCard <- function(questionIx, questionInfo, section, text) {
   list(card_type = 'q_select',
        section = section,
        order = 1,
-       data = list(title = titleForQuestion(questionIx),
+       data = list(title = trimws(questionInfo$Question),
                    text = text,
                    code = paste0('mc:', questionIx),
                    required = TRUE,
-                   options = optionListForQuestion(questionIx)))
+                   options = optionListForQuestion(questionInfo)))
 }
 
-optionListForQuestion <- function(questionIx) {
+optionListForQuestion <- function(questionInfo) {
   # Convert mirtCAT options [dataframe columns named 'Option-0', etc] to card options
-  text <- optionTextsForQuestion(questionIx)
+  text <- as.character(questionInfo[1, startsWith(colnames(questionInfo), "Option")])
   value <- as.character(0:(length(text) - 1))
   data.frame(text=text, value=value, order=value)
 }
